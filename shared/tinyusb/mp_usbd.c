@@ -25,6 +25,7 @@
  */
 
 #include "py/mpconfig.h"
+#include "mphalport.h"
 
 #if MICROPY_HW_ENABLE_USBDEV
 
@@ -55,6 +56,7 @@ extern void __real_dcd_event_handler(dcd_event_t const *event, bool in_isr);
 TU_ATTR_FAST_FUNC void __wrap_dcd_event_handler(dcd_event_t const *event, bool in_isr) {
     __real_dcd_event_handler(event, in_isr);
     mp_usbd_schedule_task();
+    mp_hal_wake_main_task_from_isr();
 }
 
 TU_ATTR_FAST_FUNC void mp_usbd_schedule_task(void) {
